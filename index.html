@@ -4,10 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Obsidianを開く</title>
+<style>
+  body { font-family: sans-serif; text-align: center; margin-top: 15vh; background: #fafafa; }
+  #open {
+    display: inline-block; padding: 20px 48px; font-size: 1.3em; font-weight: bold;
+    color: #fff; background: #7c3aed; border-radius: 12px; text-decoration: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  }
+  #open:active { transform: scale(.97); }
+  #name { color: #555; margin-top: 18px; font-size: .95em; }
+  #hint { color: #999; margin-top: 24px; font-size: .8em; }
+</style>
 </head>
-<body style="font-family:sans-serif;text-align:center;margin-top:40px;">
-<p>Obsidianを開いています…</p>
-<p><a id="link" href="#">開かない場合はここをタップ</a></p>
+<body>
+<p><a id="open" href="#">Obsidianで開く</a></p>
+<p id="name"></p>
+<p id="hint">初回は「Obsidianを開きますか？」の確認が出ます。<br>「常に許可」にチェックすると次回から自動で開きます。</p>
 <script>
 (function () {
   var params = new URLSearchParams(location.search);
@@ -31,7 +43,9 @@
     file = 'Claude/_daily_clients';
   }
   var uri = 'obsidian://open?vault=' + encodeURIComponent(vault) + '&file=' + encodeURIComponent(file);
-  document.getElementById('link').href = uri;
+  document.getElementById('open').href = uri;
+  document.getElementById('name').textContent = file;
+  // 「常に許可」済みの環境ではこの自動起動が効く。未許可ならボタンクリックで。
   location.href = uri;
 })();
 </script>
