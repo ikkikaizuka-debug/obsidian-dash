@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Obsidianを開く</title>
+</head>
+<body style="font-family:sans-serif;text-align:center;margin-top:40px;">
+<p>Obsidianを開いています…</p>
+<p><a id="link" href="#">開かない場合はここをタップ</a></p>
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var target = params.get('t') || 'board';
+  var vault = 'Obsidian Vault';
+  // JST基準の現在日時（端末のタイムゾーンに依存させない）
+  var jst = new Date(Date.now() + 9 * 3600 * 1000);
+  function fmt(d) {
+    return d.getUTCFullYear() + '-' +
+      String(d.getUTCMonth() + 1).padStart(2, '0') + '-' +
+      String(d.getUTCDate()).padStart(2, '0');
+  }
+  var file;
+  if (target === 'daily') {
+    file = 'Daily Notes/' + fmt(jst) + '_予定表';
+  } else if (target === 'weekly') {
+    var dow = (jst.getUTCDay() + 6) % 7; // 月曜=0
+    var monday = new Date(jst.getTime() - dow * 86400000);
+    file = 'Weekly/' + fmt(monday) + '_週次パイプライン';
+  } else {
+    file = 'Claude/_daily_clients';
+  }
+  var uri = 'obsidian://open?vault=' + encodeURIComponent(vault) + '&file=' + encodeURIComponent(file);
+  document.getElementById('link').href = uri;
+  location.href = uri;
+})();
+</script>
+</body>
+</html>
