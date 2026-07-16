@@ -43,10 +43,23 @@
     file = 'Claude/_daily_clients';
   }
   var uri = 'obsidian://open?vault=' + encodeURIComponent(vault) + '&file=' + encodeURIComponent(file);
-  document.getElementById('open').href = uri;
+  var btn = document.getElementById('open');
+  btn.href = uri;
   document.getElementById('name').textContent = file;
+  // 起動発火後にタブを自分で閉じる（カレンダー等から新規タブで開かれた場合のみ有効）。
+  // ただし初回訪問は「常に許可」ダイアログを消してしまわないよう閉じない。
+  function closeSoon(ms) { setTimeout(function () { window.close(); }, ms); }
+  var seen = false;
+  try { seen = !!localStorage.getItem('od_seen'); } catch (e) {}
+  function markSeen() { try { localStorage.setItem('od_seen', '1'); } catch (e) {} }
+  btn.addEventListener('click', function () {
+    if (seen) closeSoon(1500);
+    markSeen(); seen = true;
+  });
   // 「常に許可」済みの環境ではこの自動起動が効く。未許可ならボタンクリックで。
   location.href = uri;
+  if (seen) closeSoon(2000);
+  markSeen();
 })();
 </script>
 </body>
